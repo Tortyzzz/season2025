@@ -1,59 +1,47 @@
-#include <cmath>
 #include <vector>
 #include <iostream>
 using namespace std;
 
-pair<vector<int>, int> decoderHammingCode(vector<int> received) {
-    int n = received.size();
-    int r = 0;
-    
-    while (pow(2, r) < n + 1) {
-        r++;
-    }
+vector<int> generateHammingCode(const vector<int>& messageBits) {
+    int m = 7;    // инф бит
+    int r = 4;    // пров бит
+    int n = m + r; // длина
 
-    int error_pos = 0;
+    vector<int> HC(n);
 
-    // Вычисляем синдром ошибки
-    for (int i = 0; i < r; ++i) {
-        int pos = pow(2, i);
-        int parity = 0;
+    HC[0] = -1;
+    HC[1] = -1;
+    HC[3] = -1;
+    HC[7] = -1;
 
-        for (int j = 1; j <= n; ++j) {
-            if (j & pos) {
-                parity ^= received[j - 1];
-            }
-        }
-
-        if (parity != 0) {
-            error_pos += pos;
+    int j = 0;
+    for (int i = 0; i < n; i++) {
+        if (HC[i] != -1) {
+            HC[i] = messageBits[j++];
         }
     }
+    // XOR или то с чем я облажался:(
+    HC[0] = HC[2] ^ HC[4] ^ HC[6] ^ HC[8] ^ HC[10];
+    HC[1] = HC[2] ^ HC[5] ^ HC[6] ^ HC[9] ^ HC[10];
+    HC[3] = HC[4] ^ HC[5] ^ HC[6];
+    HC[7] = HC[8] ^ HC[9] ^ HC[10];
 
-    if (error_pos > 0 && error_pos <= n) {
-        received[error_pos - 1] = 1 - received[error_pos - 1];
-    }
-
-    return make_pair(received, error_pos);
+    return HC;
 }
 
 int main() {
     setlocale(LC_ALL, "rus");
 
-    vector<int> receivedCode = { 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1 };
+    // 7 информационных бит
+    vector<int> msgBit = { 1, 0, 0, 1, 0, 0, 1 };
 
-    auto result = decoderHammingCode(receivedCode);
+    vector<int> hammingCode = generateHammingCode(msgBit);
 
-    vector<int> correctedCode = result.first;
-    int errorBit = result.second;
-
-    cout << "Исправленный код: ";
-    for (int bit : correctedCode) cout << bit << " ";
-    cout << endl;
-
-    if (errorBit == 0) {
-        cout << "Ошибок нет" << endl;
-    }
-    else {
-        cout << "Error corrected at bit position: " << errorBit << endl;
-    }
+    cout << "Информационные биты: ";
+    for (int bit : msgBit)
+        cout << bit << " ";
+    cout << endl << "Код Хэмминга (11,7): ";
+    for (int bit : hammingCode)
+        cout << bit << ", ";
+    
 }
