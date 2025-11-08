@@ -1,1 +1,49 @@
+#include <vector>
+#include <iostream>
+using namespace std;
+
+vector<int> generateHammingCode(const vector<int>& messageBits) {
+    int m = 7;    // инф бит
+    int r = 4;    // пров бит
+    int n = m + r; // длина
+
+    vector<int> HC(n);
+
+    HC[0] = -1;
+    HC[1] = -1;
+    HC[3] = -1;
+    HC[7] = -1;
+
+    int j = 0;
+    for (int i = 0; i < n; i++) {
+        if (HC[i] != -1) {
+            HC[i] = messageBits[j++];
+        }
+    }
+    // XOR или то с чем я облажался:(
+    HC[0] = HC[2] ^ HC[4] ^ HC[6] ^ HC[8] ^ HC[10];
+    HC[1] = HC[2] ^ HC[5] ^ HC[6] ^ HC[9] ^ HC[10];
+    HC[3] = HC[4] ^ HC[5] ^ HC[6];
+    HC[7] = HC[8] ^ HC[9] ^ HC[10];
+
+    return HC;
+}
+
+int main() {
+    setlocale(LC_ALL, "rus");
+
+    // 7 информационных бит
+    vector<int> msgBit = { 1, 0, 0, 1, 0, 0, 1 };
+
+    vector<int> hammingCode = generateHammingCode(msgBit);
+
+    cout << "Информационные биты: ";
+    for (int bit : msgBit)
+        cout << bit << " ";
+    cout << endl << "Код Хэмминга (11,7): ";
+    for (int bit : hammingCode)
+        cout << bit << ", ";
+    
+}
+
 
