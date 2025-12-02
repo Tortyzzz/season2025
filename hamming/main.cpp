@@ -1,3 +1,5 @@
+// Демонстрация
+
 #include "hamming.hpp"
 #include <iostream>
 #include <vector>
