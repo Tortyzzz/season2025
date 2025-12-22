@@ -1,13 +1,9 @@
-// library
-
 #ifndef HAMMING_HPP
 #define HAMMING_HPP
 
 #include <vector>
 #include <string>
 #include <utility>
-
-using namespace std;
 
 // Вспомогательные функции
 
@@ -19,12 +15,12 @@ inline bool isPowerOfTwo(int n) {
 int calculateRedundantBits(int m);
 
 // Функция кодирования Хэмминга
-vector<int> generateHammingCode(const vector<int>& messageBits);
+std::vector<int> generateHammingCode(const std::vector<int>& messageBits);
 
 // Функция декодирования Хэмминга с исправлением ошибок
-pair<vector<int>, int> decodeHammingCode(const vector<int>& receivedCode);
+std::pair<std::vector<int>, int> decodeHammingCode(const std::vector<int>& receivedCode);
 
 // Функция для вывода вектора
-void printVector(const vector<int>& vec, const string& name);
+void printVector(const std::vector<int>& vec, const std::string& name);
 
 #endif
