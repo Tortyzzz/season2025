@@ -1,4 +1,3 @@
-// Реализация
 #include "hamming.hpp"
 #include <iostream>
 #include <cmath>
@@ -14,27 +13,27 @@ int calculateRedundantBits(int m) {
 }
 
 vector<int> generateHammingCode(const vector<int>& messageBits) {
-    int m = messageBits.size(); // длина кодируемого слова
-    int r = calculateRedundantBits(m); // количество проверочных битов
-    int n = m + r; // итоговая длина кодируемого слова вместе с проверочными битами
+    int m = messageBits.size(); 
+    int r = calculateRedundantBits(m);
+    int n = m + r; 
 
     vector<int> hammingCode(n, 0);
 
-    for (int i = 0; i < r; i++) { // цикл определения мест проверочных битов
+    for (int i = 0; i < r; i++) {
         int pos = pow(2, i) - 1;
         if (pos < n) {
-            hammingCode[pos] = -1; // для дальнейшего определения проверочных битов отделяем их.
+            hammingCode[pos] = -1;
         }
     }
 
     int messageIndex = 0;
-    for (int i = 0; i < n; i++) { // определение информационных битов в закодированном слове
+    for (int i = 0; i < n; i++) {
         if (hammingCode[i] != -1) {
             hammingCode[i] = messageBits[messageIndex++];
         }
     }
 
-    for (int i = 0; i < r; i++) { // вычисление проверочных битов при помощи XOR
+    for (int i = 0; i < r; i++) { 
         int parityPos = pow(2, i) - 1;
         if (parityPos >= n) continue;
 
@@ -48,51 +47,49 @@ vector<int> generateHammingCode(const vector<int>& messageBits) {
         hammingCode[parityPos] = parity;
     }
 
-    return hammingCode; // закодированные сообщение
+    return hammingCode; 
 }
-
 
 pair<vector<int>, int> decodeHammingCode(const vector<int>& receivedCode) {
     int n = receivedCode.size();
     int r = 0;
-    while (pow(2, r) < n + 1) { // проверка количества проверочных битов в переданом, закодированном слове
+    while (pow(2, r) < n + 1) { 
         r++;
     }
 
     int errorPos = 0;
-    for (int i = 0; i < r; i++) { // определение синдрома
+    for (int i = 0; i < r; i++) {
         int parityPos = pow(2, i) - 1;
         if (parityPos >= n) continue;
 
         int parity = 0;
         for (int j = parityPos; j < n; j++) {
-            if ((((j + 1) >> i) & 1)) {     // если j-тый бит вляет на синдром то,
-                parity ^= receivedCode[j];  // выполняем операцию XOR
+            if ((((j + 1) >> i) & 1)) {    
+                parity ^= receivedCode[j]; 
             }
         }
 
-        if (parity != 0) { // указание на место ошибки
+        if (parity != 0) { 
             errorPos += parityPos + 1;
         }
     }
 
-    // Создаем копию для исправления
     vector<int> correctedCode = receivedCode;
 
-    if (errorPos > 0 && errorPos <= n) {    // исправление ошибки
-        correctedCode[errorPos - 1] ^= 1;    // инвертация бита
+    if (errorPos > 0 && errorPos <= n) {  
+        correctedCode[errorPos - 1] ^= 1; 
     }
 
     vector<int> messageBits;
     for (int i = 0; i < n; i++) {
-        if (!isPowerOfTwo(i + 1)) {     // извлечение информационных битов
-            messageBits.push_back(correctedCode[i]); // добавление их в декодированное слово
+        if (!isPowerOfTwo(i + 1)) {   
+            messageBits.push_back(correctedCode[i]);
         }
     }
 
-    return make_pair(messageBits, errorPos); // исправленное сообщение и ошибка(если есть...)
+    return make_pair(messageBits, errorPos);
+    
 }
-
 
 void printVector(const vector<int>& vec, const string& name) {
     cout << name << ": ";
