@@ -22,8 +22,7 @@ int main() {
     vector<vector<int>>testMessages5 = {
         { 1, 0, 0, 1, 1, 0, 0 }
     };
-
-    // Тест 1: Одна ошибка
+    
     for (size_t i = 0; i < testMessages0.size(); i++) {
         cout << "Тест 1" << endl;
         printVector(testMessages0[i], "Исходное сообщение");
